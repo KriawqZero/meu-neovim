@@ -2,15 +2,27 @@
 call plug#begin()
     " Gerenciamento de temas
     Plug 'loctvl842/monokai-pro.nvim'
+    Plug 'catppuccin/nvim'
     Plug 'daltonmenezes/aura-theme', { 'rtp': 'packages/neovim' }
+    Plug 'nvim-tree/nvim-web-devicons'      " Ícones  melhores
 
     " Plugins de funcionalidades
+    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} " Coloração avançada
     Plug 'm4xshen/autoclose.nvim'           " Autocompleta parênteses, colchetes, etc.
+    Plug 'utilyre/barbecue.nvim'            " Auxiliar de POO, barra de classes
+    Plug 'rcarriga/nvim-notify'             " Notificações
+    Plug 'SmiteshP/nvim-navic'              " Lualine dependencia
+    Plug 'nvim-lualine/lualine.nvim'        " Status bar melhor
+    Plug 'akinsho/bufferline.nvim', { 'tag': '*' }
+    "Plug 'github/copilot.vim'               " Github Copilot
+    Plug 'nvimtools/none-ls.nvim'           " Auxiliar formatador 
+    Plug 'lukas-reineke/indent-blankline.nvim' " Identação de linhas em branco
+    Plug 'jose-elias-alvarez/typescript.nvim' " Suporte a TypeScript
+    Plug 'prisma/vim-prisma'                  " Suporte a Prisma ORM (Node.JS)
+    Plug 'jose-elias-alvarez/null-ls.nvim'    " Suporte a funcionalidades externas
 
     " Plugin de navegação de arquivos 
     Plug 'nvim-tree/nvim-tree.lua'          " Navegador de arquivos
-    Plug 'nvim-tree/nvim-web-devicons'      " Ícones pro nvim-tree
-    Plug 'vim-airline/vim-airline'          " Status bar
     Plug 'ryanoasis/vim-devicons'           " Ícones para arquivos e pastas
     Plug 'sheerun/vim-polyglot'             " Suporte a múltiplas linguagens
     Plug 'terrortylor/nvim-comment'         " Comentários rápidos
@@ -38,6 +50,10 @@ call plug#begin()
     " Plugin de formatação
     Plug 'stevearc/conform.nvim'
 call plug#end()
+
+" Definir tecla leader
+let mapleader = " "
+
 " ### FIM: Plugin Manager ###
 
 " ### INÍCIO: Mapeamento de Teclas ###
@@ -53,9 +69,6 @@ nnoremap <leader>j :resize +5<CR>
 " Ajustar tamanho de vsplits (vertical)
 nnoremap <leader>h :vertical resize -5<CR>
 nnoremap <leader>l :vertical resize +5<CR>
-
-" Definir tecla leader
-let mapleader = "\\"
 
 " Pra sair da busca atual
 nnoremap <Esc> :noh<CR>
@@ -73,6 +86,13 @@ nnoremap <S-w> :bd<CR>
 nnoremap <C-s> :w<CR>
 inoremap <C-s> <Esc>:w<CR>a
 vnoremap <C-s> <Esc>:w<CR>gv
+
+" Map pra adicionar linha abaixo sem abrir modo inserção
+nnoremap O o<Esc>k
+nnoremap t ko
+
+" Map pra abrir modo de inserção e identar automaticament
+nnoremap <Tab> i<Tab>
 
 " Find files using Telescope command-line sugar
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
@@ -92,18 +112,23 @@ nnoremap D "_dd
 nnoremap U <C-R>
 " ### FIM: Mapeamento de Teclas ###
 
-" ### INÍCIO: Configurações Globais ###
+" ### CARREGAR CONFIG LUA ############"
+lua require('init')
 
+" ### INÍCIO: Configurações Globais ###
 " Configura a fonte para JetBrains Mono com tamanho 12px
-set guifont=JetBrains\ Mono:h12
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 1
+set guifont=Hack\ Nerd\ Font:h12
 
 " TEMA USADO NO NEOVIM
-colorscheme aura-dark-soft-text
+"colorscheme catppuccin-macchiato
 
 " Ajusta a escala da interface para 1.2
 let g:neovide_scale_factor = 1.2
+
+filetype on          " Detect and set the file type option and trigger the FileType Event
+filetype plugin on   " Load the plugin file for the file type, if any
+filetype indent on   " Load the indent file for the file type, if any
+set termguicolors
 set cursorline       " Enable gutter
 syntax on            " Enable syntax highlight
 set nu               " Enable line numbers
@@ -131,9 +156,28 @@ set splitbelow       " Create the horizontal splits below
 set autoread         " Update vim after file update from outside
 set mouse=a          " Enable mouse support
 set relativenumber   " Enable vim relative number scroll
-filetype on          " Detect and set the file type option and trigger the FileType Event
-filetype plugin on   " Load the plugin file for the file type, if any
-filetype indent on   " Load the indent file for the file type, if any
-
-lua require('init')
 " ### FIM: Configurações Globais ###
+
+" Set the *.blade.php file to be filetype of blade 
+augroup BladeFiltypeRelated
+  au BufNewFile,BufRead *.blade.php set ft=blade
+augroup END
+
+" ### INICIO: Treesitter pra laravel blade ###
+lua <<EOF
+local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
+parser_config.blade = {
+  install_info = {
+    url = "https://github.com/EmranMR/tree-sitter-blade",
+    files = {"src/parser.c"},
+    branch = "main",
+  },
+  filetype = "blade"
+}
+EOF
+
+autocmd FileType blade setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab
+"autocmd FileType * setlocal shiftwidth=4 tabstop=4 softtabstop=4 expandtab
+
+
+
