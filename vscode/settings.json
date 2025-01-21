@@ -1,0 +1,21 @@
+{
+    "workbench.iconTheme": "Monokai Pro (Filter Spectrum) Icons",
+    "editor.fontFamily": "Hack Nerd Font",
+    "editor.minimap.enabled": false,
+    "breadcrumbs.enabled": false,
+    "editor.stickyScroll.enabled": false,
+    "workbench.colorTheme": "Monokai Pro (Filter Spectrum)",
+    "[vue]": {
+        "editor.defaultFormatter": "Vue.volar"
+    },
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "bladeFormatter.format.indentSize": 2,
+    "vim.vimrc.enable": true,
+    "vim.vimrc.path": "C:\\Users\\Marcilio\\AppData\\Local\\nvim\\vscode\\init.vim",
+    "editor.lineNumbers": "relative",
+    "editor.mouseWheelZoom": true,
+    "git.autofetch": true,
+    "[typescript]": {
+        "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+    },
+}
