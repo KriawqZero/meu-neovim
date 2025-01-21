@@ -14,7 +14,7 @@ call plug#begin()
     Plug 'SmiteshP/nvim-navic'              " Lualine dependencia
     Plug 'nvim-lualine/lualine.nvim'        " Status bar melhor
     Plug 'akinsho/bufferline.nvim', { 'tag': '*' }
-    "Plug 'github/copilot.vim'               " Github Copilot
+    Plug 'github/copilot.vim'               " Github Copilot
     Plug 'nvimtools/none-ls.nvim'           " Auxiliar formatador 
     Plug 'lukas-reineke/indent-blankline.nvim' " Identação de linhas em branco
     Plug 'jose-elias-alvarez/typescript.nvim' " Suporte a TypeScript
@@ -123,7 +123,7 @@ set guifont=Hack\ Nerd\ Font:h12
 "colorscheme catppuccin-macchiato
 
 " Ajusta a escala da interface para 1.2
-let g:neovide_scale_factor = 1.2
+"let g:neovide_scale_factor = 1.2
 
 filetype on          " Detect and set the file type option and trigger the FileType Event
 filetype plugin on   " Load the plugin file for the file type, if any

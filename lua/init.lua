@@ -149,6 +149,75 @@ lspconfig.eslint.setup {
     end,
 }
 
+-- Configuração para o rust-analyzer
+require('lspconfig').rust_analyzer.setup({
+  on_attach = function(client, bufnr)
+    -- Configurações adicionais para atalhos e diagnósticos
+    local opts = { noremap = true, silent = true, buffer = bufnr }
+
+    -- Configurar diagnósticos
+    vim.diagnostic.config({
+      virtual_text = true,       -- Erros inline
+      signs = true,              -- Ícones na margem
+      update_in_insert = true,   -- Atualizar enquanto digita
+      underline = true,          -- Sublinha erros
+      severity_sort = true,      -- Ordenar por severidade
+    })
+  end,
+  settings = {
+    ["rust-analyzer"] = {
+      cargo = {
+        allFeatures = true, -- Habilitar todas as features do cargo
+      },
+      checkOnSave = {
+        command = "clippy", -- Usar Clippy para linting no save
+      },
+      assist = {
+        importGranularity = "module",
+        importPrefix = "by_self",
+      },
+      procMacro = {
+        enable = true, -- Habilitar suporte para macros de proc
+      },
+    },
+  },
+})
+
+-- Configuração pra golang
+
+-- Configuração do gopls (LSP do Go)
+lspconfig.gopls.setup({
+  capabilities = capabilities,
+  on_attach = function(client, bufnr)
+    -- Configurar keymaps para o LSP
+    local opts = { noremap = true, silent = true, buffer = bufnr }
+    
+    -- Funções para navegação, hover, etc.
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+
+    -- Configurações para diagnósticos
+    vim.diagnostic.config({
+      virtual_text = true,
+      signs = true,
+      underline = true,
+      update_in_insert = true,
+    })
+  end,
+  settings = {
+    gopls = {
+      analyses = {
+        unusedparams = true,
+        shadow = true,
+      },
+      staticcheck = true,  -- Habilita o uso do staticcheck para verificações estáticas
+      gofumpt = true,      -- Aplica formatação Go com gofumpt
+    }
+  }
+})
+
 lspconfig.clangd.setup{
     capabilities = capabilities
 }
@@ -157,6 +226,7 @@ lspconfig.pyright.setup{
     capabilities = capabilities
 }
 
+vim.keymap.set('n', 'gr', vim.lsp.buf.references, { noremap = true, silent = true })
 vim.keymap.set('n', 'K', vim.lsp.buf.hover, { noremap = true, silent = true })
 vim.keymap.set('n', '<Leader>e', vim.diagnostic.open_float, { noremap = true, silent = true })
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { noremap = true, silent = true })
@@ -165,6 +235,16 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { noremap = true, silent = t
 vim.api.nvim_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "<leader>a", "<cmd>lua vim.lsp.buf.code_action()<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', { noremap = true, silent = true })
+
+-- Mapeia Ctrl+F para formatar o buffer com o LSP configurado para a linguagem atual
+vim.api.nvim_set_keymap(
+    'n', -- Modo normal
+    '<C-f>', -- Atalho: Ctrl+F
+    '<cmd>lua vim.lsp.buf.format({ async = true })<CR>', -- Comando para formatar
+    { noremap = true, silent = true } -- Não remapear e silencioso
+)
+
 
 -- ### FIM: Configuração do LSP ###
 
@@ -228,6 +308,15 @@ require('nvim-tree').setup({
 
         -- Atualizar a árvore
         vim.keymap.set('n', 'R', api.tree.reload, opts)
+
+        -- Mapeamentos personalizados para abrir arquivos em split
+        vim.keymap.set('n', '<leader>vs', function()
+            api.node.open.vertical()  -- Abre o arquivo no split vertical
+        end, opts)
+
+        vim.keymap.set('n', '<leader>hs', function()
+            api.node.open.horizontal()  -- Abre o arquivo no split horizontal
+        end, opts)
     end,
 })
 -- ### FIM: Configuração do nvim-tree ###
