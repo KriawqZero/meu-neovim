@@ -8,7 +8,17 @@ require("telescope").setup({
       "vendor" 
     },
     hidden = true,
-  }
+    vimgrep_arguments = { 
+      'rg', 
+      '--hidden', 
+      '--color=never', 
+      '--no-heading', 
+      '--with-filename', 
+      '--line-number', 
+      '--column', 
+      '--smart-case'
+    }
+  },
 })
 -- ### FIM: Configuração do telescope
 
@@ -53,7 +63,7 @@ cmp.setup({
 
 -- ### INÍCIO: Configuração do Treesitter ###
 require'nvim-treesitter.install'.prefer_git = false
-require'nvim-treesitter.install'.compilers = { 'clang', 'gcc' }
+require'nvim-treesitter.install'.compilers = { 'clang', 'gcc', 'g++'}
 require'nvim-treesitter.configs'.setup {
     ensure_installed = {
         "c", "cpp", "c_sharp", "php", "blade", "html",
@@ -219,6 +229,7 @@ lspconfig.gopls.setup({
 })
 
 lspconfig.clangd.setup{
+    cmd = { "clangd", "--query-driver=C:/Aplicativos/MinGW/bin/gcc.exe" },
     capabilities = capabilities
 }
 

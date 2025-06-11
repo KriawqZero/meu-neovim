@@ -21,6 +21,9 @@ call plug#begin()
     Plug 'prisma/vim-prisma'                  " Suporte a Prisma ORM (Node.JS)
     Plug 'jose-elias-alvarez/null-ls.nvim'    " Suporte a funcionalidades externas
 
+    " Plugin Gerenciador de Tempo
+    Plug 'wakatime/vim-wakatime'
+
     " Plugin de navegação de arquivos 
     Plug 'nvim-tree/nvim-tree.lua'          " Navegador de arquivos
     Plug 'ryanoasis/vim-devicons'           " Ícones para arquivos e pastas
@@ -163,6 +166,11 @@ augroup BladeFiltypeRelated
   au BufNewFile,BufRead *.blade.php set ft=blade
 augroup END
 
+augroup web_indent
+    autocmd!
+    autocmd FileType vue,json,javascript,typescript,tsx,jsx,blade setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab
+augroup END
+
 " ### INICIO: Treesitter pra laravel blade ###
 lua <<EOF
 local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
@@ -175,9 +183,3 @@ parser_config.blade = {
   filetype = "blade"
 }
 EOF
-
-autocmd FileType blade setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab
-"autocmd FileType * setlocal shiftwidth=4 tabstop=4 softtabstop=4 expandtab
-
-
-
